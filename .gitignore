@@ -1,1 +1,4 @@
-container/db/data
+container/db/data/**
+!container/db/data/**/
+!container/db/data/.gitkeep
+
