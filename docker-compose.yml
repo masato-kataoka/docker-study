@@ -1,10 +1,39 @@
 version: '3'
 
 services:
+  nginx:
+    container_name: "nginx"
+    build:
+      context: ./container/nginx
+    depends_on:
+      - app
+    ports:
+      - 80:80
+    volumes:
+      - ./:/src
+
+  app:
+    container_name: "app"
+    build:
+      context: ./container/php
+    depends_on:
+      - db
+    volumes:
+      - ./:/src
+      - /src/node_modules
+      - /src/vendor
+      - ./container/php/php.ini:/usr/local/etc/php/php.ini
+
+  redis:
+    image: redis:alpine
+    container_name: "redis"
+    ports:
+      - 16379:6379
+
   # MySQL
   db:
     image: mysql:8.0
-    container_name: db
+    container_name: "db"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: test_database
@@ -13,19 +42,19 @@ services:
       TZ: 'Asia/Tokyo'
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
-    - ./container/db/data:/var/lib/mysql
-    - ./container/db/my.cnf:/etc/mysql/conf.d/my.cnf
-    - ./container/db/sql:/docker-entrypoint-initdb.d
+      - ./container/db/data:/var/lib/mysql
+      - ./container/db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./container/db/sql:/docker-entrypoint-initdb.d
     ports:
-    - 3306:3306
+      - 3306:3306
 
   phpmyadmin:
     container_name: test_phpmyadmin
     image: phpmyadmin/phpmyadmin
     environment:
-    - PMA_ARBITRARY=1
-    - PMA_HOSTS=db
-    - PMA_USER=root
-    - PMA_PASSWORD=root
+      - PMA_ARBITRARY=1
+      - PMA_HOSTS=db
+      - PMA_USER=root
+      - PMA_PASSWORD=root
     ports:
-    - 8080:80
+      - 8080:80
