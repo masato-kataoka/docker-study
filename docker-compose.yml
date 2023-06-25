@@ -12,8 +12,8 @@ services:
     volumes:
       - ./:/src
 
-  app:
-    container_name: "app"
+  php:
+    container_name: "php"
     build:
       context: ./container/php
     depends_on:
@@ -23,12 +23,6 @@ services:
       - /src/node_modules
       - /src/vendor
       - ./container/php/php.ini:/usr/local/etc/php/php.ini
-
-  redis:
-    image: redis:alpine
-    container_name: "redis"
-    ports:
-      - 16379:6379
 
   # MySQL
   db:
