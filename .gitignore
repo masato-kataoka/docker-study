@@ -3,3 +3,6 @@ container/db/data/**
 
 container/nginx/logs/**
 !container/nginx/logs/.gitkeep
+
+/node_modules
+/vendor
